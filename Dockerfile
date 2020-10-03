@@ -1,5 +1,7 @@
 FROM golang:alpine
 
+WORKDIR /opt
+
 ENV TZ "Asia/Shanghai"
 
 ENV GRPC_GO_LOG_VERBOSITY_LEVEL "99" 
