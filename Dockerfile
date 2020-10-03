@@ -20,7 +20,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN curl -o protoc.zip -LJ https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip \
     && unzip protoc.zip \
-    && mv ./include /usr/ \
-    && rm -rf ./bin && rm ./readme.txt
+    && mv include/ /usr/ \
+    && rm -rf /opt/*
 
 CMD ["sh"]
