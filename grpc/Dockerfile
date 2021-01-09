@@ -1,26 +1,27 @@
 FROM golang:alpine
 
-WORKDIR /opt
-
 ENV TZ "Asia/Shanghai"
 
+# grpc log config
 ENV GRPC_GO_LOG_VERBOSITY_LEVEL "99" 
 ENV GRPC_GO_LOG_SEVERITY_LEVEL  "info"
 
-RUN go env -w GOPROXY="https://goproxy.cn,direct"
+ADD ./google /usr/include/google
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+RUN \
+    sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
     && apk update \
-    && apk add protobuf tzdata curl git wget iproute2 bash upx make zip \
-    && cp /usr/share/zoneinfo/$TZ /etc/localtime \
-    && echo $TZ > /etc/timezone \
-    && go get google.golang.org/grpc \
-    && go get github.com/golang/protobuf/protoc-gen-go \
-    && go install github.com/golang/protobuf/protoc-gen-go
-
-RUN curl -o protoc.zip -LJ https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/protoc-3.14.0-linux-x86_64.zip \
-    && unzip protoc.zip \
-    && cp -R ./include/ /usr/ \
-    && rm -R ./*
+    && apk add tzdata make git protoc \
+    && cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
+    && go env -w GOPROXY="https://goproxy.cn,direct" \
+    && cd /srv && go mod init grpc.io/dev \
+    && go install \
+            google.golang.org/protobuf/cmd/protoc-gen-go \
+            google.golang.org/grpc/cmd/protoc-gen-go-grpc \
+            github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
+            github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
+    && rm -rf /srv/* \
+    && rm -rf /go/pkg \
+    && rm -rf /var/cache/apk/*
 
 CMD ["sh"]
