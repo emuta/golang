@@ -18,7 +18,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && go get github.com/golang/protobuf/protoc-gen-go \
     && go install github.com/golang/protobuf/protoc-gen-go
 
-RUN curl -o protoc.zip -LJ https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip \
+RUN curl -o protoc.zip -LJ https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/protoc-3.14.0-linux-x86_64.zip \
     && unzip protoc.zip \
     && cp -R ./include/ /usr/ \
     && rm -R ./*
